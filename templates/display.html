@@ -5,6 +5,24 @@
     <title>Title</title>
 </head>
 <body>
-
+    <h1>
+    {{ data['name_with_spaces'] }} has used these words these many times in their Album: {{ data['selected_album'] }}
+    </h1>
+    <br>
+    {% for word, times in data['result'] %}
+        <p>
+            {% if times != 1 %}
+                {{ word }}, {{ times }} times!
+            {% endif %}
+        </p>
+    {%  endfor %}
+    <p>
+        and these words, 1 time:
+    </p>
+    {% for word, times in data['result'] %}
+            {% if times == 1 %}
+                {{ word }},
+            {% endif %}
+    {%  endfor %}
 </body>
 </html>
