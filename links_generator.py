@@ -12,6 +12,9 @@ file 1. start point.
 structure:
 file 1 (this): sends list of links -> file 2 (count_words.py): makes file etc and generates dictionary of occurrence
 
+
+day 3:
+making the 2 files pass arguments between one another
 """
 
 # prev comments
@@ -70,7 +73,7 @@ albums_list = album_list_soup.select('.album_link')  # prev comment: in flask im
 for i in albums_list:
     print(i.text)
 
-search_album = input()
+search_album = input("Enter search album")
 # prev comment: remember to remove duplicate songs like in deluxe versions
 search_album_modified = search_album.replace('-', ' ').replace('*', '').replace('?', '').replace('   ', ' ').replace('  ', ' ').replace('(', '').replace(')', '').replace('{', '')
 search_album_modified_list = search_album_modified.split(' ')
@@ -91,8 +94,10 @@ songs_in_album = selected_album_link_soup.select('.u-display_block')
 songs_in_album_link_list = []
 
 for i in songs_in_album:
-    print(type(i))
+    # print(type(i))
     # album_list_soup_object = bs4.BeautifulSoup(i, 'lxml')  # .find_all() works on bs4 object
     # print(type(album_list_soup_object))
     if i.has_attr('href'):  # checks is the list element of bs4 object type has attribute of href and then the link lists is appended with the link
         songs_in_album_link_list.append(i['href'])
+
+print(songs_in_album_link_list)

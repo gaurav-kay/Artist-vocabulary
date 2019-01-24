@@ -1,6 +1,6 @@
 import bs4 as bs
 import requests
-
+from . import links_generator as file1
 """
 
 file 2
@@ -11,9 +11,33 @@ im assuming that i am doing this in django so yeah. im also copying most snippet
 
 """
 
+
+def is_feature():
+    flag = False
+    for i in range(len(file_contents)):
+        if file_contents[i] == '[':
+            j = 0
+            while True:
+                if file_contents[i + j] == ']':
+                    break
+                else:
+                    j += 1
+            square_brackets_content = file_contents[i: i + j + 1]  # genius has everything in sq brackets
+            del j
+            for j in range(len(square_brackets_content) - len(artist)):
+                if artist.lower() == square_brackets_content[j: j + len(artist)].lower():  # to handle different case artists
+                    flag = True
+                    break  # flag = True is to say that the following verse is by the selected artist
+            # print(square_brackets_content + " : " + str(flag))        else:
+            i += 1
+    if flag:
+        return True
+    else:
+        return False
+
+
 artist = "xxxtentacion"
 res = requests.get('https://genius.com/xxxtentacion-numb-lyrics')  # https://genius.com/Xxxtentacion-numb-lyrics')  # https://genius.com/Kris-wu-rich-brian-joji-trippie-redd-and-baauer-18-lyrics')
-is_feature = False
 
 soup = bs.BeautifulSoup(res.text, 'lxml')  # .encode("utf-8")  # to take care of chinese characters and all xD or while reading file
 lyrics_soup = soup.select('.lyrics')[0]  # .select return a list of ALL occurrences of .lyrics so the 1st element is considered
@@ -37,7 +61,7 @@ modified_file_contents = ""
 with open('lyrics_raw.txt', 'r', encoding="utf-8") as f:
     file_contents = f.read()  # f.read() gives a string
 
-if is_feature:
+if is_feature():
     for i in range(len(file_contents)):
         # filter 1: removing other artists
         if file_contents[i] == '[':
@@ -52,7 +76,8 @@ if is_feature:
             del j
             for j in range(len(square_brackets_content) - len(artist)):
                 if artist.lower() == square_brackets_content[j: j + len(artist)].lower():  # to handle different case artists
-                    flag = True  # flag = True is to say that the following verse is by the selected artist
+                    flag = True
+                    break  # flag = True is to say that the following verse is by the selected artist
             # print(square_brackets_content + " : " + str(flag))
             if flag:
                 j = len(square_brackets_content) + 1
