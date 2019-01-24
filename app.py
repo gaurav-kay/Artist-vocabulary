@@ -272,8 +272,8 @@ def count_words(link):
 def word_counter_driver():
     # print("reached")
     for link in data['song_links']:
-        # print(link)
         count_words(link)
+        print("link processed = ", link)
 
     if len(dicts) >= 2:  # merge
         dicts.append({**dicts.pop(), **dicts.pop()})
@@ -281,8 +281,10 @@ def word_counter_driver():
     if '' in dicts[0]:
         dicts[0].pop('', None)
 
+    print(len(dicts), "dicts")
+
     sorted_list = sorted(dicts[0].items(), key=lambda t: t[1], reverse=True)  # https://www.youtube.com/watch?v=MGD_b2w_GU4
-    print(sorted_list)
+    # print(sorted_list)
 
     data['result'] = sorted_list
 
