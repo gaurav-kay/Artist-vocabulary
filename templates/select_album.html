@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Name</title>
+</head>
+<body>
+<form action="/count_words" method="POST">  <!-- action is i think for the function that calls it -->
+    <input type="text" name="selected_album">
+    <input type="submit" value="submit">
+</form>
+<h1>
+    {% for album in data['albums_list'] %}
+        Album = {{ album }} <br>
+    {% endfor %}
+</h1>
+</body>
+</html>
