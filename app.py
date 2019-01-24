@@ -5,6 +5,7 @@ import requests
 app = Flask(__name__)
 data = globals()
 result = globals()
+dicts = []
 """
 
 lesson learnt: i don't think in flask you can have dynamic website where after you enter input the page changes. it has to reroute to another
@@ -17,6 +18,7 @@ data {
     'albums_list': [""],
     'selected_album' = "",
     'song_links': [""] 
+    'result': [("", "")]
 }
 
 """
@@ -76,21 +78,22 @@ def find_data(name_with_spaces):
 
 
 def links_generator(selected_album):
-    print(selected_album, end="")
-    print("ok")
-    search_album_modified = selected_album.replace('-', ' ').replace('*', '').replace('?', '').replace('   ', ' ').replace('  ', ' ').replace('(', '').replace(')', '').replace('{', '')
-    search_album_modified_list = search_album_modified.split(' ')
-    selected_album_link = "-".join(search_album_modified_list)
-    selected_album_link = "https://genius.com/albums/" + "-".join(data['name_with_spaces']) + "/" + selected_album_link
-
+    # print(selected_album, end="")
+    # print("ok")
+    # search_album_modified = selected_album.replace('-', ' ').replace('*', '').replace('?', '').replace('   ', ' ').replace('  ', ' ').replace('(', '').replace(')', '').replace('{', '')
+    # search_album_modified_list = selected_album.split(' ')
+    # print(selected_album)
+    selected_album_link = "-".join(selected_album.split(' '))
+    selected_album_link = "https://genius.com/albums/" + "-".join(data['name_with_spaces'].split(' ')) + "/" + selected_album_link
+    print("selected = ", selected_album_link)
     # prev comment: this is the point i realise i could've just asked for the album *facepalm*
 
     selected_album_link_source_html = requests.get(selected_album_link)
     selected_album_link_soup = bs4.BeautifulSoup(selected_album_link_source_html.text, 'lxml')
     # u-display_block is the class that contains all the links of all the songs in the album selected
 
-    songs_in_album = selected_album_link_soup.select('.u-display_block')
-    print(songs_in_album)
+    songs_in_album = selected_album_link_soup.select('.u-display_block')  # select('.u-display_block')
+    # print(songs_in_album)
     # first_song = selected_album_link_soup.select('.u-xx_large_vertical_margins')
 
     songs_in_album_link_list = []
@@ -101,7 +104,7 @@ def links_generator(selected_album):
         # print(type(album_list_soup_object))
         if i.has_attr('href'):  # checks is the list element of bs4 object type has attribute of href and then the link lists is appended with the link
             songs_in_album_link_list.append(i['href'])
-    print(songs_in_album_link_list)
+    # print(songs_in_album_link_list)
 
     return songs_in_album_link_list
 
@@ -115,10 +118,11 @@ def select_album():
         data['selected_album'] = selected_album
 
         links_of_songs_in_album = links_generator(selected_album)
-        print(selected_album, "selected album is")
+        # print(selected_album, "selected album is")
         data['song_links'] = links_of_songs_in_album
+        # print(links_of_songs_in_album, "links")
         word_counter_driver()
-        return render_template('display.html', data=data)
+    return render_template('display.html', data=data)
 
 
 def count_words(link):
@@ -205,7 +209,7 @@ def count_words(link):
                 except IndexError:
                     pass
 
-    print(modified_file_contents)
+    # print(modified_file_contents)
 
     # now to remove them annotations like comma, apostrophes etc
 
@@ -219,11 +223,12 @@ def count_words(link):
         .replace('{', '')\
         .replace('\'', '')\
         .replace(',', '')\
+        .replace('-', '')\
         .replace('\n', ' ')
 
     modified_file_contents = modified_file_contents.lower()
 
-    print(modified_file_contents)
+    # print(modified_file_contents)
 
     with open('lyrics_raw.txt', 'w', encoding="utf-8") as f:
         f.write(modified_file_contents)
@@ -254,21 +259,32 @@ def count_words(link):
         #     if i is word:
         #         words_list.remove(i)  # removing the word in the pair above from the list to improve efficiency
 
-    print(dict_unsorted)
+    if len(dicts) >= 2:  # merge
+        dicts.append({**dicts.pop(), **dicts.pop()})
+    else:
+        dicts.append(dict_unsorted)
 
-    if '' in dict_unsorted:
-        dict_unsorted.pop('', None)
+    # print(dict_unsorted)
 
-    sorted_list = sorted(dict_unsorted.items(), key=lambda t: t[1], reverse=True)  # https://www.youtube.com/watch?v=MGD_b2w_GU4
-
-    print(sorted_list)
+    # print(sorted_list)
 
 
 def word_counter_driver():
-    print("reached")
+    # print("reached")
     for link in data['song_links']:
-        print(link)
+        # print(link)
         count_words(link)
+
+    if len(dicts) >= 2:  # merge
+        dicts.append({**dicts.pop(), **dicts.pop()})
+
+    if '' in dicts[0]:
+        dicts[0].pop('', None)
+
+    sorted_list = sorted(dicts[0].items(), key=lambda t: t[1], reverse=True)  # https://www.youtube.com/watch?v=MGD_b2w_GU4
+    print(sorted_list)
+
+    data['result'] = sorted_list
 
 
 def is_feature(file_contents):
@@ -298,3 +314,10 @@ def is_feature(file_contents):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+"""
+
+FUCKING DONEEEEEE LETS GOOOOO DATE:24/01/2019 10:34 PM. LMAO HAVE TO STUDY FOR ME Xd
+
+"""
