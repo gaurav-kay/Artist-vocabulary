@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 import bs4
 import requests
 
@@ -224,6 +224,11 @@ def count_words(link):
         .replace('\'', '')\
         .replace(',', '')\
         .replace('-', '')\
+        .replace('!', '')\
+        .replace('\"', '')\
+        .replace('--', '')\
+        .replace('.', '')\
+        .replace(',', '')\
         .replace('\n', ' ')
 
     modified_file_contents = modified_file_contents.lower()
@@ -280,8 +285,6 @@ def word_counter_driver():
 
     if '' in dicts[0]:
         dicts[0].pop('', None)
-
-    print(len(dicts), "dicts")
 
     sorted_list = sorted(dicts[0].items(), key=lambda t: t[1], reverse=True)  # https://www.youtube.com/watch?v=MGD_b2w_GU4
     # print(sorted_list)
