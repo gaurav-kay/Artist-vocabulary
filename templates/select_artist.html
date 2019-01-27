@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Select Artist</title>
-</head>
-<body>
+{% extends "layout.html" %}
+{% block content %}
     <form method="POST">  <!-- action is i think for the function that calls it -->
         <input type="text" name="name_with_spaces">
         <input type="submit" value="submit">
     </form>
-</body>
-</html>
+{% endblock content %}

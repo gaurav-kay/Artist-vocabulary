@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "layout.html" %}
+{% block content %}
     <h1>
     {{ data['name_with_spaces'] }} has used these words these many times in their Album: {{ data['selected_album'] }}
     </h1>
@@ -17,6 +12,15 @@
         </p>
     {%  endfor %}
     <p>
+        and these words, 2 times:
+    </p>
+    {% for word, times in data['result'] %}
+            {% if times == 1 %}
+                {{ word }},
+            {% endif %}
+    {%  endfor %}
+    <br>
+    <p>
         and these words, 1 time:
     </p>
     {% for word, times in data['result'] %}
@@ -24,5 +28,4 @@
                 {{ word }},
             {% endif %}
     {%  endfor %}
-</body>
-</html>
+{% endblock content %}
