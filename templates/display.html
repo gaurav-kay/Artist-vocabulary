@@ -1,21 +1,19 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>
+    <h1 class="container">
     {{ data['name_with_spaces'] }} has used these words these many times in their Album: {{ data['selected_album'] }}
     </h1>
     <br>
     {% for word, times in data['result'] %}
-        <p>
-            {% if times != 1 %}
-                {{ word }}, {{ times }} times!
+                {{ word }}
+            {% if times > 2 %}
+                {{ times }} times <br>
             {% endif %}
-        </p>
     {%  endfor %}
-    <p>
-        and these words, 2 times:
-    </p>
+    and these words, 2 times:
+
     {% for word, times in data['result'] %}
-            {% if times == 1 %}
+            {% if times == 2 %}
                 {{ word }},
             {% endif %}
     {%  endfor %}
